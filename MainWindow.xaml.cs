@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Configuration;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace DBTestFramework
 {
@@ -21,12 +23,35 @@ namespace DBTestFramework
     /// </summary>
     public partial class MainWindow : Window
     {
+        SqlConnection sqlConnection;
         public MainWindow()
         {
-            InitializeComponent();
+            
 
+            InitializeComponent();
             // Verbindung zu unserer Datenbank
             string connectionString = ConfigurationManager.ConnectionStrings["DBTestFramework.Properties.Settings.CardioVaskularConnectionString"].ConnectionString;
+            sqlConnection = new SqlConnection(connectionString);
+            ShowZoos(); // Methodenaufruf
+        }
+
+        private void ShowZoos()
+        {
+            string query = "Select * from Zoo";
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection); // SqlDataAdapter == ist sowas wie ein Interface was ermöglich tabellen wie c# objekte zu verwenden
+
+            using (sqlDataAdapter)
+            {
+                DataTable zooTable = new DataTable();
+                sqlDataAdapter.Fill(zooTable);
+
+                // Welche Informationen der Tabelle, in unserem 'DataTable' sollen in unserer 'Listbox' angezeigt werden.
+                listZoos.DisplayMemberPath = "Location";
+                // Welcher Wert soll gegeben werden, wenn eines unserer Items von der Listbox ausgewählt wird.
+                listZoos.SelectedValuePath = "Id";
+                //
+                listZoos.ItemsSource = zooTable.DefaultView;
+            }
         }
     }
 }
