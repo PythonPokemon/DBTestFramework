@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Configuration;
 
 namespace DBTestFramework
 {
@@ -23,6 +24,9 @@ namespace DBTestFramework
         public MainWindow()
         {
             InitializeComponent();
+
+            // Verbindung zu unserer Datenbank
+            string connectionString = ConfigurationManager.ConnectionStrings["DBTestFramework.Properties.Settings.CardioVaskularConnectionString"].ConnectionString;
         }
     }
 }
