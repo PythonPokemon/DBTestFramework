@@ -8,7 +8,9 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Label Content="Zooliste" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <ListBox Name="listZoos" Margin="10,41,648,176"/>
+        <Label Content="Tiere im ausgewähltem Zoo" HorizontalAlignment="Right" Margin="0,15,414,0" VerticalAlignment="Top"/>
+        <ListBox Name="listZoos" SelectionChanged="listZoos_SelectionChanged" Margin="10,41,590,176"/>      
+        <ListBox Name="listAssociatedAnimals" Margin="230,41,371,176"/>
 
     </Grid>
 </Window>

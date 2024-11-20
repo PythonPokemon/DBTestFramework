@@ -38,7 +38,8 @@ namespace DBTestFramework
         private void ShowZoos()
         {
             string query = "Select * from Zoo";
-            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection); // SqlDataAdapter == ist sowas wie ein Interface was ermöglich tabellen wie c# objekte zu verwenden
+            // SqlDataAdapter == ist sowas wie ein Interface was ermöglich tabellen wie c# objekte zu verwenden
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection); 
 
             using (sqlDataAdapter)
             {
@@ -52,6 +53,38 @@ namespace DBTestFramework
                 //
                 listZoos.ItemsSource = zooTable.DefaultView;
             }
+        }
+
+        private void ShowAssociatedAnimals()
+        {
+            string query = "SELECT a.Name \r\n" +  // bedeutet zeilenumbruch in der anweisung: \r\n
+                            "FROM Animal a \r\n" +
+                            "INNER JOIN ZooAnimal za ON a.Id = za.AnimalId \r\n" +
+                            "WHERE za.ZooId = @ZooId";  // variable die man später setzen kann: @ZooId
+
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+            using (sqlDataAdapter)
+            {
+                sqlCommand.Parameters.AddWithValue("@ZooId", listZoos.SelectedValue);
+
+                DataTable animalTable = new DataTable();
+                sqlDataAdapter.Fill(animalTable);
+
+                // Welche Informationen der Tabelle, in unserem 'DataTable' sollen in unserer 'Listbox' angezeigt werden.
+                listAssociatedAnimals.DisplayMemberPath = "Name";
+                // Welcher Wert soll gegeben werden, wenn eines unserer Items von der Listbox ausgewählt wird.
+                listAssociatedAnimals.SelectedValuePath = "Id";
+                //
+                listAssociatedAnimals.ItemsSource = animalTable.DefaultView;
+            }
+        }
+
+        private void listZoos_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowAssociatedAnimals();
         }
     }
 }
