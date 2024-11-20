@@ -6,11 +6,15 @@
         xmlns:local="clr-namespace:DBTestFramework"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Label Content="Zooliste" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <Label Content="Tiere im ausgewähltem Zoo" HorizontalAlignment="Right" Margin="0,15,414,0" VerticalAlignment="Top"/>
-        <ListBox Name="listZoos" SelectionChanged="listZoos_SelectionChanged" Margin="10,41,590,176"/>      
+    <Viewbox>
+        <Grid>
+        <Label Content="Zooliste" HorizontalAlignment="Left" Margin="84,15,0,0" VerticalAlignment="Top"/>
+        <Label Content="Tiere im ausgewähltem Zoo" HorizontalAlignment="Right" Margin="0,15,392,0" VerticalAlignment="Top"/>
+        <ListBox Name="listZoos" SelectionChanged="listZoos_SelectionChanged" Margin="10,41,590,176"/>
         <ListBox Name="listAssociatedAnimals" Margin="230,41,371,176"/>
-
-    </Grid>
+        <Label Content="Alle Tiere" Margin="516,15,218,393" Width="65" Height="26" />
+        <ListBox Name="listAllAnimals" Width="200" Margin="449,41,151,10"/>
+    </Grid>        
+    </Viewbox>
+    
 </Window>

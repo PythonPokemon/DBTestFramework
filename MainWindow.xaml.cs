@@ -32,9 +32,11 @@ namespace DBTestFramework
             // Verbindung zu unserer Datenbank
             string connectionString = ConfigurationManager.ConnectionStrings["DBTestFramework.Properties.Settings.CardioVaskularConnectionString"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
-            ShowZoos(); // Methodenaufruf
+            ShowZoos(); // Methodenaufruf | Zeigt alle Staädte mit Zoo's
+            ShowAllAnimals(); // Methodenaufruf, zeigte alle Tiere aus der Datenbank
         }
 
+        //-------------------------------------------------------------------------->Methode zeigt die Städte an, die ein Zoo haben<
         private void ShowZoos()
         {
             string query = "Select * from Zoo";
@@ -55,6 +57,35 @@ namespace DBTestFramework
             }
         }
 
+        //-------------------------------------------------------------------------->Methode zeigt alle tiere an, die in der Datenbank gelistet sind<
+        public void ShowAllAnimals()
+        {
+            try
+            {
+                string query = "select * from Animal";
+                SqlDataAdapter sqlDataAdapter =new SqlDataAdapter(query, sqlConnection);
+
+                using (sqlDataAdapter)
+                {
+                    DataTable animalTable = new DataTable();
+                    sqlDataAdapter.Fill(animalTable);
+                    listAllAnimals.DisplayMemberPath = "Name";
+                    listAllAnimals.SelectedValue = "Id";
+                    listAllAnimals.ItemsSource = animalTable.DefaultView;
+
+
+
+                }
+            }
+            catch (Exception e)
+            {
+
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+
+        //-------------------------------------------------------------------------->Methode zeigt tiere im ausgewählten Zoo an<
         private void ShowAssociatedAnimals()
         {
             string query = "SELECT a.Name \r\n" +  // bedeutet zeilenumbruch in der anweisung: \r\n
