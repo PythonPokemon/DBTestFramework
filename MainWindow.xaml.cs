@@ -88,7 +88,7 @@ namespace DBTestFramework
         //-------------------------------------------------------------------------->Methode zeigt tiere im ausgewählten Zoo an<
         private void ShowAssociatedAnimals()               
         {
-            if(listZoos.SelectedValue == null) // wenn das Selectedvalue leer ist geh aus der methode raus und mach nichts!, wenn er nicht lee ist versuche, denn code im try catch auszuführen
+            if(listZoos.SelectedValue == null) // wenn das Selectedvalue wert leer ist geh aus der methode raus und mach nichts!, wenn der wert nicht leer ist versuche, denn code im try catch auszuführen
             {
                 return;
             }
@@ -122,9 +122,7 @@ namespace DBTestFramework
             {
 
                 MessageBox.Show(e.ToString());
-            }
-
-            
+            }            
         }
 
         private void listZoos_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -134,10 +132,9 @@ namespace DBTestFramework
 
 
 
-        // Zoo löschen knopf
+        //-------------------------------------------------------------------------->Methode: Zoo aus der Datenbank lösche, samt eintrag | 'löschen' taste<
         private void DeleteZoo_Click(object sender, RoutedEventArgs e)
         {
-
             try
             {
                 string query = "delete from Zoo where id = @ZooId";
@@ -155,9 +152,103 @@ namespace DBTestFramework
             {
                 sqlConnection.Close(); // Verbindung wird geschlossen
                 ShowZoos();
+            }            
+        }
+
+        //-------------------------------------------------------------------------->Methode: Zoo der Datenbank hinzufügen | 'Zoo hinzufügen' taste<
+        public void AddZoo_Click(object sender, RoutedEventArgs e)
+        {
+            //MessageBox.Show("Funktionstest, ob der knopf funktioniert");
+
+            try
+            {
+                string query = "insert into Zoo values (@Location)"; // @Location ist ein parameter aus der Datenbank, um den zu setzen brtaucht man sqlcommand
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlConnection.Open();
+                sqlCommand.Parameters.AddWithValue("@Location", myTextBox.Text); // der text der in der textbox eingetragen und durch name'myTextBox' hier referenziert wird, soll in der Datenbank tabelle 'Zoo' in der spalte Location als parameter übergeben werden
+                sqlCommand.ExecuteScalar(); // das braucht man zu ausführen!
+            }
+            catch (Exception )
+            {
+
+                MessageBox.Show( "Fehler beim hinzufügen");
+            }
+            finally
+            {
+                sqlConnection.Close();
+                ShowZoos();
             }
 
-            
         }
+
+        //-------------------------------------------------------------------------->Methode: Tier einem Zoo zuweisen, in der Datenbank auch | 'Tier hinzufügen' taste<
+        public void AddAnimalToZoo_Click(object sender, RoutedEventArgs e)
+        {
+            if (listZoos.SelectedItem == null || listAllAnimals.SelectedItem == null)
+            {
+                MessageBox.Show("Bitte wählen Sie sowohl einen Zoo als auch ein Tier aus.");
+                return;
+            }
+
+            try
+            {
+                // Werte aus DataRowView extrahieren
+                int zooId = Convert.ToInt32(((DataRowView)listZoos.SelectedItem)["Id"]);
+                int animalId = Convert.ToInt32(((DataRowView)listAllAnimals.SelectedItem)["Id"]);
+
+                
+
+                // SQL-Query
+                string query = "INSERT INTO ZooAnimal (ZooId, AnimalId) VALUES (@ZooId, @AnimalId)";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                
+                    sqlConnection.Open();
+                    sqlCommand.Parameters.AddWithValue("@ZooId", zooId);
+                    sqlCommand.Parameters.AddWithValue("@AnimalId", animalId);
+
+                // Der Befehl sqlCommand.ExecuteNonQuery() wird in ADO.NET verwendet, um eine SQL-Abfrage auszuführen, die keine Daten zurückgibt.
+                int rowsAffected = sqlCommand.ExecuteNonQuery();                                 
+
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Fehler beim hinzufügen");
+            }
+
+            finally
+            {                
+                sqlConnection.Close();              
+                ShowAssociatedAnimals(); // Aktualisiere die Ansicht der zugeordneten Tiere
+            }
+        }
+
+
+
     }
 }
+
+/*
+ Good to know Goody
+
+Der Befehl sqlCommand.ExecuteNonQuery() wird in ADO.NET verwendet, um eine SQL-Abfrage auszuführen, die keine Daten zurückgibt.
+
+Bedeutung im Detail:
+
+Rückgabewert:
+ExecuteNonQuery gibt die Anzahl der betroffenen Zeilen in der Datenbank zurück.
+
+Beispiel für betroffene Zeilen:
+Bei einem INSERT-Statement: Anzahl der eingefügten Zeilen.
+Bei einem UPDATE-Statement: Anzahl der aktualisierten Zeilen.
+Bei einem DELETE-Statement: Anzahl der gelöschten Zeilen.
+Einsatzgebiet:
+ExecuteNonQuery wird hauptsächlich verwendet für:
+
+Datenmodifikation: INSERT, UPDATE, DELETE
+Datenbank-Objekte: Erstellen oder Löschen von Tabellen, Views etc. mit CREATE TABLE oder DROP TABLE.
+Unterschied zu anderen Methoden:
+
+ExecuteReader(): Liefert Daten in Form eines SqlDataReader.
+ExecuteScalar(): Liefert den Wert der ersten Spalte der ersten Zeile des Ergebnisses (z. B. ein einzelner Wert).
+ */
