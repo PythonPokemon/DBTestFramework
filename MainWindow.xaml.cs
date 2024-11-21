@@ -309,7 +309,49 @@ namespace DBTestFramework
             }
         }
 
+        //-------------------------------------------------------------------------->Methode: Zeige den Ausgewählten Zoo In Der TextBox An, Datenbank auch | 'xx' taste<
+        public void ZeigtAusgewähltesTierAusTierListeInTextBoxAn()
+        {
+            if (listAllAnimals.SelectedItem == null)
+            {
+                myTextBox.Text = string.Empty; // Textbox leeren, wenn kein Tier ausgewählt wurde
+                return;
+            }
 
+            try
+            {
+                // AnimalId aus DataRowView extrahieren
+                int animalId = Convert.ToInt32(((DataRowView)listAllAnimals.SelectedItem)["Id"]);
+
+                string query = "SELECT Name FROM Animal WHERE Id = @AnimalId";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlCommand.Parameters.AddWithValue("@AnimalId", animalId);
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+                DataTable zooDataTable = new DataTable();
+                sqlDataAdapter.Fill(zooDataTable);
+
+                if (zooDataTable.Rows.Count > 0)
+                {
+                    myTextBox.Text = zooDataTable.Rows[0]["Name"].ToString();
+                }
+                else
+                {
+                    myTextBox.Text = "Kein Tier gefunden.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fehler beim Anzeigen des ausgewählten Tiers: {ex.Message}");
+            }
+        }
+
+
+
+        private void listAllAnimals_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ZeigtAusgewähltesTierAusTierListeInTextBoxAn();
+        }
     }
 }
 
