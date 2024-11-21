@@ -223,7 +223,7 @@ namespace DBTestFramework
             }
         }
 
-        //-------------------------------------------------------------------------->Methode: Zoo der Datenbank hinzufügen | 'Zoo hinzufügen' taste<
+        //-------------------------------------------------------------------------->Methode: Tier der Tierliste, Datenbank hinzufügen | 'Tier hinzufügen' taste<
         public void AddAnimal_Click(object sender, RoutedEventArgs e)
         {
             //MessageBox.Show("Funktionstest, ob der knopf funktioniert");
@@ -248,6 +248,43 @@ namespace DBTestFramework
             }
 
         }
+
+        //-------------------------------------------------------------------------->Methode: Tier aus der Tierliste, Datenbank löschen | 'Tier löschen' taste<
+
+        public void TierAusTierLIsteLöschen(object sender, RoutedEventArgs e)
+        {
+            //MessageBox.Show("Funktionstest, ob der knopf funktioniert");
+
+            try
+            {
+                // Werte aus DataRowView extrahieren
+                int zooId = Convert.ToInt32(((DataRowView)listZoos.SelectedItem)["Id"]);
+                int animalId = Convert.ToInt32(((DataRowView)listAllAnimals.SelectedItem)["Id"]);
+
+                string query = "delete from Animal where id = @AnimalId";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+
+                sqlConnection.Open();
+                sqlCommand.Parameters.AddWithValue("@ZooId", zooId);
+                sqlCommand.Parameters.AddWithValue("@AnimalId", animalId);
+
+                // Der Befehl sqlCommand.ExecuteNonQuery() wird in ADO.NET verwendet, um eine SQL-Abfrage auszuführen, die keine Daten zurückgibt.
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                sqlConnection.Close(); // Verbindung wird geschlossen
+                ShowAllAnimals();
+                ShowAssociatedAnimals();
+            }
+        }
+
+        //-------------------------------------------------------------------------->Methode: Aktualisierung, Datenbank auch | 'xx' taste<
 
     }
 }
