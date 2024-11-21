@@ -32,12 +32,12 @@ namespace DBTestFramework
             // Verbindung zu unserer Datenbank
             string connectionString = ConfigurationManager.ConnectionStrings["DBTestFramework.Properties.Settings.CardioVaskularConnectionString"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
-            ShowZoos(); // Methodenaufruf | Zeigt alle 'Städte' mit Zoo's die in der Datenbank gelistet sind
-            ShowAllAnimals(); // Methodenaufruf, zeigte alle 'Tiere' die in der Datenbank gelistet sind
+            ZeigeZoosAn(); // Methodenaufruf | Zeigt alle 'Städte' mit Zoo's die in der Datenbank gelistet sind
+            ZeigeAlleTiereAn(); // Methodenaufruf, zeigte alle 'Tiere' die in der Datenbank gelistet sind
         }
 
         //-------------------------------------------------------------------------->Methode zeigt die Städte an, die ein Zoo haben<
-        private void ShowZoos()
+        private void ZeigeZoosAn()
         {
             string query = "Select * from Zoo";
             // SqlDataAdapter == ist sowas wie ein Interface was ermöglich tabellen wie c# objekte zu verwenden
@@ -58,7 +58,7 @@ namespace DBTestFramework
         }
 
         //-------------------------------------------------------------------------->Methode zeigt alle tiere an, die in der Datenbank gelistet sind<
-        public void ShowAllAnimals()
+        public void ZeigeAlleTiereAn()
         {
             try
             {
@@ -86,7 +86,7 @@ namespace DBTestFramework
 
 
         //-------------------------------------------------------------------------->Methode zeigt tiere im ausgewählten Zoo an<
-        private void ShowAssociatedAnimals()               
+        private void ZeigtAlleTiereImZoo()               
         {
             if(listZoos.SelectedValue == null) // wenn das Selectedvalue wert leer ist geh aus der methode raus und mach nichts!, wenn der wert nicht leer ist versuche, denn code im try catch auszuführen
             {
@@ -127,13 +127,14 @@ namespace DBTestFramework
 
         private void listZoos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ShowAssociatedAnimals();
+            ZeigtAlleTiereImZoo();
+            ZeigeAusgewähltenZooInDerTextBoxAn();
         }
 
 
 
         //-------------------------------------------------------------------------->Methode: Zoo aus der Datenbank lösche, samt eintrag | 'löschen' taste<
-        private void DeleteZoo_Click(object sender, RoutedEventArgs e)
+        private void ZooLöschen(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -151,12 +152,12 @@ namespace DBTestFramework
             finally
             {
                 sqlConnection.Close(); // Verbindung wird geschlossen
-                ShowZoos();
+                ZeigeZoosAn();
             }            
         }
 
         //-------------------------------------------------------------------------->Methode: Zoo der Datenbank hinzufügen | 'Zoo hinzufügen' taste<
-        public void AddZoo_Click(object sender, RoutedEventArgs e)
+        public void NeuenZooHinzufügen(object sender, RoutedEventArgs e)
         {
             //MessageBox.Show("Funktionstest, ob der knopf funktioniert");
 
@@ -176,13 +177,13 @@ namespace DBTestFramework
             finally
             {
                 sqlConnection.Close();
-                ShowZoos();
+                ZeigeZoosAn();
             }
 
         }
 
         //-------------------------------------------------------------------------->Methode: Tier einem Zoo zuweisen, in der Datenbank auch | 'Tier hinzufügen' taste<
-        public void AddAnimalToZoo_Click(object sender, RoutedEventArgs e)
+        public void TierZumZooHinzufügen(object sender, RoutedEventArgs e)
         {
             if (listZoos.SelectedItem == null || listAllAnimals.SelectedItem == null)
             {
@@ -219,12 +220,12 @@ namespace DBTestFramework
             finally
             {                
                 sqlConnection.Close();              
-                ShowAssociatedAnimals(); // Aktualisiere die Ansicht der zugeordneten Tiere
+                ZeigtAlleTiereImZoo(); // Aktualisiere die Ansicht der zugeordneten Tiere
             }
         }
 
         //-------------------------------------------------------------------------->Methode: Tier der Tierliste, Datenbank hinzufügen | 'Tier hinzufügen' taste<
-        public void AddAnimal_Click(object sender, RoutedEventArgs e)
+        public void TierDerTierListeHinzufügen(object sender, RoutedEventArgs e)
         {
             //MessageBox.Show("Funktionstest, ob der knopf funktioniert");
 
@@ -244,7 +245,7 @@ namespace DBTestFramework
             finally
             {
                 sqlConnection.Close();
-                ShowAllAnimals();
+                ZeigeAlleTiereAn();
             }
 
         }
@@ -279,12 +280,35 @@ namespace DBTestFramework
             finally
             {
                 sqlConnection.Close(); // Verbindung wird geschlossen
-                ShowAllAnimals();
-                ShowAssociatedAnimals();
+                ZeigeAlleTiereAn();
+                ZeigtAlleTiereImZoo();
             }
         }
 
-        //-------------------------------------------------------------------------->Methode: Aktualisierung, Datenbank auch | 'xx' taste<
+        //-------------------------------------------------------------------------->Methode: Zeige den Ausgewählten Zoo In Der TextBox An, Datenbank auch | 'xx' taste<
+        public void ZeigeAusgewähltenZooInDerTextBoxAn() // daraus achten das die methoden signatur gleich ist, beim methodenaufruf
+        {
+            try
+            {
+                string query = "select location from Zoo where Id = @ZooId";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+                using (sqlDataAdapter)
+                {
+                    sqlCommand.Parameters.AddWithValue("@ZooId", listZoos.SelectedValue);
+                    DataTable zooDataTable = new DataTable();
+                    sqlDataAdapter.Fill(zooDataTable);
+
+                    myTextBox.Text = zooDataTable.Rows[0]["Location"].ToString(); // gib mir an der stelle 0 die location als string
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
     }
 }
