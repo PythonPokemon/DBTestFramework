@@ -32,8 +32,8 @@ namespace DBTestFramework
             // Verbindung zu unserer Datenbank
             string connectionString = ConfigurationManager.ConnectionStrings["DBTestFramework.Properties.Settings.CardioVaskularConnectionString"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
-            ShowZoos(); // Methodenaufruf | Zeigt alle Staädte mit Zoo's
-            ShowAllAnimals(); // Methodenaufruf, zeigte alle Tiere aus der Datenbank
+            ShowZoos(); // Methodenaufruf | Zeigt alle 'Städte' mit Zoo's die in der Datenbank gelistet sind
+            ShowAllAnimals(); // Methodenaufruf, zeigte alle 'Tiere' die in der Datenbank gelistet sind
         }
 
         //-------------------------------------------------------------------------->Methode zeigt die Städte an, die ein Zoo haben<
@@ -63,7 +63,7 @@ namespace DBTestFramework
             try
             {
                 string query = "select * from Animal";
-                SqlDataAdapter sqlDataAdapter =new SqlDataAdapter(query, sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
 
                 using (sqlDataAdapter)
                 {
@@ -86,36 +86,78 @@ namespace DBTestFramework
 
 
         //-------------------------------------------------------------------------->Methode zeigt tiere im ausgewählten Zoo an<
-        private void ShowAssociatedAnimals()
+        private void ShowAssociatedAnimals()               
         {
-            string query = "SELECT a.Name \r\n" +  // bedeutet zeilenumbruch in der anweisung: \r\n
-                            "FROM Animal a \r\n" +
-                            "INNER JOIN ZooAnimal za ON a.Id = za.AnimalId \r\n" +
-                            "WHERE za.ZooId = @ZooId";  // variable die man später setzen kann: @ZooId
-
-            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-
-            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-
-            using (sqlDataAdapter)
+            if(listZoos.SelectedValue == null) // wenn das Selectedvalue leer ist geh aus der methode raus und mach nichts!, wenn er nicht lee ist versuche, denn code im try catch auszuführen
             {
-                sqlCommand.Parameters.AddWithValue("@ZooId", listZoos.SelectedValue);
-
-                DataTable animalTable = new DataTable();
-                sqlDataAdapter.Fill(animalTable);
-
-                // Welche Informationen der Tabelle, in unserem 'DataTable' sollen in unserer 'Listbox' angezeigt werden.
-                listAssociatedAnimals.DisplayMemberPath = "Name";
-                // Welcher Wert soll gegeben werden, wenn eines unserer Items von der Listbox ausgewählt wird.
-                listAssociatedAnimals.SelectedValuePath = "Id";
-                //
-                listAssociatedAnimals.ItemsSource = animalTable.DefaultView;
+                return;
             }
+            try
+            {
+                string query =  "SELECT a.Name \r\n" +  // bedeutet zeilenumbruch in der anweisung: \r\n
+                                "FROM Animal a \r\n" +
+                                "INNER JOIN ZooAnimal za ON a.Id = za.AnimalId \r\n" +
+                                "WHERE za.ZooId = @ZooId";  // variable die man später setzen kann: @ZooId
+
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                using (sqlDataAdapter)
+                {
+                    sqlCommand.Parameters.AddWithValue("@ZooId", listZoos.SelectedValue);
+
+                    DataTable animalTable = new DataTable();
+                    sqlDataAdapter.Fill(animalTable);
+
+                    // Welche Informationen der Tabelle, in unserem 'DataTable' sollen in unserer 'Listbox' angezeigt werden.
+                    listAssociatedAnimals.DisplayMemberPath = "Name";
+                    // Welcher Wert soll gegeben werden, wenn eines unserer Items von der Listbox ausgewählt wird.
+                    listAssociatedAnimals.SelectedValuePath = "Id";
+                    //
+                    listAssociatedAnimals.ItemsSource = animalTable.DefaultView;
+                }
+            }
+            catch (Exception e)
+            {
+
+                MessageBox.Show(e.ToString());
+            }
+
+            
         }
 
         private void listZoos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ShowAssociatedAnimals();
+        }
+
+
+
+        // Zoo löschen knopf
+        private void DeleteZoo_Click(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                string query = "delete from Zoo where id = @ZooId";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlConnection.Open(); // wiel die verbindung geöffnet wurde, muss sie unten in finally geschlossenw werden!
+                sqlCommand.Parameters.AddWithValue("@ZooId", listZoos.SelectedValue);
+                sqlCommand.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                sqlConnection.Close(); // Verbindung wird geschlossen
+                ShowZoos();
+            }
+
+            
         }
     }
 }
