@@ -223,7 +223,31 @@ namespace DBTestFramework
             }
         }
 
+        //-------------------------------------------------------------------------->Methode: Zoo der Datenbank hinzufügen | 'Zoo hinzufügen' taste<
+        public void AddAnimal_Click(object sender, RoutedEventArgs e)
+        {
+            //MessageBox.Show("Funktionstest, ob der knopf funktioniert");
 
+            try
+            {
+                string query = "insert into Animal values (@Name)"; // @Location ist ein parameter aus der Datenbank, um den zu setzen brtaucht man sqlcommand
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlConnection.Open();
+                sqlCommand.Parameters.AddWithValue("@Name", myTextBox.Text); // der text der in der textbox eingetragen und durch name'myTextBox' hier referenziert wird, soll in der Datenbank tabelle 'Zoo' in der spalte Location als parameter übergeben werden
+                sqlCommand.ExecuteScalar(); // das braucht man zu ausführen!
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Fehler beim hinzufügen eines Tieres zur Tiertabelle");
+            }
+            finally
+            {
+                sqlConnection.Close();
+                ShowAllAnimals();
+            }
+
+        }
 
     }
 }

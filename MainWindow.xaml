@@ -18,7 +18,7 @@
             <Button Content="Zoo Löschen" HorizontalAlignment="Left" Margin="10,263,0,0" VerticalAlignment="Top" Width="200" Click="DeleteZoo_Click"/>
             <Button Content="Tier von Zoo entfernen" HorizontalAlignment="Left" Margin="230,263,0,0" VerticalAlignment="Top" Width="200"/>
             <Button Content="Tier aktualisieren" HorizontalAlignment="Left" Margin="229,404,0,0" VerticalAlignment="Top" Width="200"/>
-            <Button Content="Tier hinzufügen" HorizontalAlignment="Left" Margin="230,379,0,0" VerticalAlignment="Top" Width="200" />
+            <Button Content="Tier hinzufügen" HorizontalAlignment="Left" Margin="230,379,0,0" VerticalAlignment="Top" Width="200" Click="AddAnimal_Click"/>
             <Button Content="Zoo aktualisieren" HorizontalAlignment="Left" Margin="10,404,0,0" VerticalAlignment="Top" Width="200"/>
             <Button Content="Zoo hinzufügen" HorizontalAlignment="Left" Margin="10,379,0,0" VerticalAlignment="Top" Width="200" Click="AddZoo_Click"/>
             <Button Content="Tier löschen" HorizontalAlignment="Left" Margin="449,404,0,0" VerticalAlignment="Top" Width="200"/>
