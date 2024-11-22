@@ -29,9 +29,9 @@ namespace DBTestFramework.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=Wasnezow\\CVSQL;Initial Catalog=CardioVaskular;Persist Security Info=T" +
             "rue;User ID=sa;Password=CVjf123!;Pooling=False;Encrypt=True;TrustServerCertifica" +
             "te=True")]
-        public string CardioVaskularConnectionString {
+        public string ZooDBConnectionString {
             get {
-                return ((string)(this["CardioVaskularConnectionString"]));
+                return ((string)(this["ZooDBConnectionString"]));
             }
         }
     }

@@ -30,7 +30,7 @@ namespace DBTestFramework
 
             InitializeComponent();
             // Verbindung zu unserer Datenbank
-            string connectionString = ConfigurationManager.ConnectionStrings["DBTestFramework.Properties.Settings.CardioVaskularConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["DBTestFramework.Properties.Settings.ZooDBConnectionString"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
             ZeigeZoosAn(); // Methodenaufruf | Zeigt alle 'Städte' mit Zoo's die in der Datenbank gelistet sind
             ZeigeAlleTiereAn(); // Methodenaufruf, zeigte alle 'Tiere' die in der Datenbank gelistet sind
