@@ -348,10 +348,13 @@ namespace DBTestFramework
 
 
 
-        private void listAllAnimals_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void listAllAnimals_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ZeigtAusgewähltesTierAusTierListeInTextBoxAn();
         }
+
+       
+
     }
 }
 

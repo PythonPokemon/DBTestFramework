@@ -16,15 +16,12 @@
         <Label Content="Alle Tiere" Margin="516,15,218,393" Width="65" Height="26" />
         <ListBox Name="listAllAnimals" Width="200" Margin="449,67,151,35" SelectionChanged="listAllAnimals_SelectionChanged"/>
             <Button Content="Zoo Löschen" HorizontalAlignment="Left" Margin="10,263,0,0" VerticalAlignment="Top" Width="200" Click="ZooLöschen"/>
-            <Button Content="Tier von Zoo entfernen" HorizontalAlignment="Left" Margin="230,263,0,0" VerticalAlignment="Top" Width="200"/>
-            <Button Content="Tier aktualisieren" HorizontalAlignment="Left" Margin="229,404,0,0" VerticalAlignment="Top" Width="200"/>
+            <Button Content="Tier von Zoo entfernen" HorizontalAlignment="Left" Margin="230,263,0,0" VerticalAlignment="Top" Width="200"/>            
             <Button Content="Tier hinzufügen" HorizontalAlignment="Left" Margin="230,379,0,0" VerticalAlignment="Top" Width="200" Click="TierDerTierListeHinzufügen"/>
-            <Button Content="Zoo aktualisieren" HorizontalAlignment="Left" Margin="10,404,0,0" VerticalAlignment="Top" Width="200"/>
             <Button Content="Zoo hinzufügen" HorizontalAlignment="Left" Margin="10,379,0,0" VerticalAlignment="Top" Width="200" Click="NeuenZooHinzufügen"/>
             <Button Content="Tier löschen" HorizontalAlignment="Left" Margin="449,404,0,0" VerticalAlignment="Top" Width="200" Click="TierAusTierLIsteLöschen"/>
             <Button Content="Tier zum Zoo hinzufügen" HorizontalAlignment="Left" Margin="449,41,0,0" VerticalAlignment="Top" Width="200" Click="TierZumZooHinzufügen"/>
             <TextBox Name="myTextBox" HorizontalAlignment="Left" Margin="10,288,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="419" Height="86" />
-
         </Grid>        
     </Viewbox>
     
